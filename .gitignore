@@ -47,3 +47,4 @@ scratchpad/
 
 # debug information files
 *.dwo
+.env
