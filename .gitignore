@@ -14,6 +14,12 @@ cmake_install.cmake
 *.user.*
 .DS_Store
 
-# Ignore external libraries
+# Ignore external libraries (gemini is allowed to ignore=false)
 external/
 subprojects/
+subprojects/*
+subprojects/projectm
+.env
+*.bak
+reference_code/
+subprojects/*

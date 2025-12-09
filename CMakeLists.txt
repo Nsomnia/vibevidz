@@ -4,25 +4,33 @@ project(vibevidz VERSION 0.1.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_AUTOMOC ON) # Enable AUTOMOC for Qt
 
-# Include FetchContent module
+# 1. FIND QT6 FIRST
+# We find Qt6 before defining targets so AUTOMOC knows which 'moc' to use.
+# Added 'OpenGLWidgets' which is required for QOpenGLWidget in Qt6.
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets OpenGL OpenGLWidgets)
+
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
+
+# 2. CONFIGURE PROJECTM
 include(FetchContent)
 
-# Declare projectM
+# Optional: Disable projectM examples/tests to speed up build and avoid extra deps (like SDL2)
+set(BUILD_TESTING OFF CACHE BOOL "" FORCE)
+set(ENABLE_SDL OFF CACHE BOOL "" FORCE)
+
 FetchContent_Declare(
   projectM
   GIT_REPOSITORY https://github.com/projectM-visualizer/projectm.git
-  GIT_TAG        v4.1.0 # Using a stable release tag
+  GIT_TAG        v4.1.0
 )
 
-# Make projectM available to our project
+# This downloads and adds projectM targets to your build
 FetchContent_MakeAvailable(projectM)
 
-# Find Qt6
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets OpenGL OpenGLWidgets)
-
-# Define the executable
+# 3. DEFINE EXECUTABLE
 add_executable(vibevidz
   src/main.cpp
   src/MainWindow.h
@@ -31,8 +39,20 @@ add_executable(vibevidz
   src/ProjectMWidget.cpp
 )
 
-# Link against Qt6 and projectM.
-# The target name for projectM is typically the project name itself, or libprojectM,
-# or projectM::projectM depending on how it's defined in its CMakeLists.txt.
-# Based on earlier investigations, 'projectM' was found to be a valid target.
-target_link_libraries(vibevidz PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets Qt6::OpenGL Qt6::OpenGLWidgets projectM)
+# 4. LINK LIBRARIES
+# Note: projectM v4 main target is often named 'libprojectM' or 'projectM'.
+# We link both common names just in case, plus the specific playlist target.
+target_link_libraries(vibevidz PRIVATE
+    Qt6::Core
+    Qt6::Gui
+    Qt6::Widgets
+    Qt6::OpenGL
+    Qt6::OpenGLWidgets
+    projectM      # Try linking the main projectM target
+)
+
+# Verify if 'projectM_playlist' is actually available from the fetch.
+# If projectM 4.1 doesn't expose it globally, you might need to check their CMake docs.
+if(TARGET projectM_playlist)
+    target_link_libraries(vibevidz PRIVATE projectM_playlist)
+endif()
