@@ -1,50 +1,19 @@
-reference_code/
+# Build artifacts
 build/
-tmp/
-scratch/
-temp/
-scratchpad/
-.env/
+bin/
+lib/
 
-# Prerequisites
-*.d
+# CMake files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+# User-specific files
+.idea/
+*.user
+*.user.*
+.DS_Store
 
-# Precompiled Headers
-*.gch
-*.pch
-
-# Linker files
-*.ilk
-
-# Debugger Files
-*.pdb
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
-
-# debug information files
-*.dwo
-.env
+# Ignore external libraries
+external/
+subprojects/
