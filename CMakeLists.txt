@@ -4,6 +4,7 @@ project(vibevidz VERSION 0.1.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_AUTOMOC ON) # Enable AUTOMOC for Qt
 
 # Include FetchContent module
 include(FetchContent)
@@ -22,7 +23,11 @@ FetchContent_MakeAvailable(projectM)
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 
 # Define the executable
-add_executable(vibevidz src/main.cpp)
+add_executable(vibevidz
+  src/main.cpp
+  src/MainWindow.h
+  src/MainWindow.cpp
+)
 
 # Link against Qt6 and projectM.
 # The target name for projectM is typically the project name itself, or libprojectM,
