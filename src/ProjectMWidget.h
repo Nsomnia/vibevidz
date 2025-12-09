@@ -8,8 +8,7 @@
 #include <QAudioSource>
 #include <QMediaDevices>
 
-// Forward declare projectM handle to avoid including C headers in our H file
-typedef struct projectm_instance projectm_handle;
+#include <projectM-4/projectM.h>
 
 class ProjectMWidget : public QOpenGLWidget, protected QOpenGLExtraFunctions
 {
@@ -35,7 +34,7 @@ private:
     void initAudio();
     void loadTextureResources();
 
-    projectm_handle* m_projectM = nullptr;
+    projectm_handle m_projectM = nullptr;
     QTimer *m_renderTimer;
     
     // Audio capture

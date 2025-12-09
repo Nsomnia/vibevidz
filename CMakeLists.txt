@@ -40,7 +40,7 @@ add_executable(vibevidz
 )
 
 # Pass the projectM source directory to C++ so we can find default resources (fonts/textures)
-target_compile_definitions(vibevidz PRIVATE PROJECTM_SRC_ROOT="${projectM_SOURCE_DIR}")
+target_compile_definitions(vibevidz PRIVATE PROJECTM_RESOURCES_PATH="${projectM_SOURCE_DIR}/src/libprojectM/resources")
 
 # 4. LINK LIBRARIES
 target_link_libraries(vibevidz PRIVATE

@@ -1,7 +1,7 @@
 #include "ProjectMWidget.h"
 
 // Includes for projectM C API
-#include <libprojectM/projectM.h>
+#include <projectM-4/projectM.h>
 
 #include <QDebug>
 #include <QDragEnterEvent>
@@ -67,27 +67,25 @@ void ProjectMWidget::processAudio()
     QByteArray data = m_audioDevice->readAll();
     if (data.isEmpty()) return;
 
-    // projectM expects PCM data. 
+    // projectM expects PCM data.
     // If our format is Float, we can pass it directly.
     if (m_audioFormat.sampleFormat() == QAudioFormat::Float) {
         const float* samples = reinterpret_cast<const float*>(data.constData());
         int numSamples = data.size() / sizeof(float);
-        
+
         // projectM 4 API: add float PCM data
-        // Assuming Stereo (Interleaved)
-        // Note: projectM might expect specific scaling, but 0.0-1.0 usually works.
-        projectm_pcm_add_float(m_projectM, samples, numSamples / 2, PROJECTM_PCM_MODE_STEREO);
+        // The last argument is the number of channels.
+        projectm_pcm_add_float(m_projectM, samples, numSamples / m_audioFormat.channelCount(),
+                                   (projectm_channels)m_audioFormat.channelCount());
     }
-    else if (m_audioFormat.sampleFormat() == QAudioFormat::Int16) {
-        const int16_t* samples = reinterpret_cast<const int16_t*>(data.constData());
-        int numSamples = data.size() / sizeof(int16_t);
-        projectm_pcm_add_short(m_projectM, samples, numSamples / 2, PROJECTM_PCM_MODE_STEREO);
-    }
+    // Other formats would need conversion to float here.
 }
 
 void ProjectMWidget::initializeGL()
 {
     initializeOpenGLFunctions();
+
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
     // Create projectM instance
     m_projectM = projectm_create();
@@ -97,30 +95,34 @@ void ProjectMWidget::initializeGL()
         return;
     }
 
+    loadTextureResources();
+
+    // Load a default preset to ensure something is displayed
+    projectm_load_preset_file(m_projectM, "/home/nsomnia/Documents/GoogleAntigravity/vibevid_gemini3/vibevidz/build/_deps/projectm-src/presets/tests/001-line.milk", true);
+}
+
+void ProjectMWidget::loadTextureResources()
+{
     // Set resource paths so projectM can find fonts/textures
     // We use the definition passed from CMake
-#ifdef PROJECTM_SRC_ROOT
-    QString resourcePath = QString(PROJECTM_SRC_ROOT) + "/src/libprojectM/resources";
-    projectm_set_texture_search_paths(m_projectM, resourcePath.toUtf8().constData());
+#ifdef PROJECTM_RESOURCES_PATH
+    const char* texturePaths[] = { PROJECTM_RESOURCES_PATH };
+    projectm_set_texture_search_paths(m_projectM, texturePaths, 1);
 #endif
-
-    // Load a default preset if available, or just verify initialization
-    // For now, we wait for the user to drop a file or load one manually
-    // projectm_load_preset_file(m_projectM, "/path/to/preset.milk");
 }
 
 void ProjectMWidget::resizeGL(int w, int h)
 {
     if (m_projectM) {
-        projectm_set_window_dimensions(m_projectM, w, h);
+        projectm_set_window_size(m_projectM, w, h);
     }
 }
 
 void ProjectMWidget::paintGL()
 {
+    glClear(GL_COLOR_BUFFER_BIT);
+
     if (!m_projectM) {
-        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
         return;
     }
 
@@ -144,7 +146,7 @@ void ProjectMWidget::dropEvent(QDropEvent *event)
     if (fileName.endsWith(".milk", Qt::CaseInsensitive)) {
         qDebug() << "Loading preset:" << fileName;
         if (m_projectM) {
-            projectm_load_preset_file(m_projectM, fileName.toUtf8().constData());
+            projectm_load_preset_file(m_projectM, fileName.toUtf8().constData(), true);
         }
     }
 }

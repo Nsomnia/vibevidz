@@ -37,4 +37,9 @@ This document provides guidelines for the Gemini agent to follow when working on
 - You can utilize any available packages already installed on the user's system.
 - You can interact with any available MCP (Multi-Capability Peripheral) servers.
 
+## 5. References and example code
+
+- the reference_code directory is git ignored but if you set false to respecting this gitignore then you may investigate previous user work and external projecfts for inspiration or items such as proper API usage.
+- The MiniMax agentic coding model, one of the current best, has thorough documentation (ignore the codebase largely; never compiled properly) in mdarkdown md files inside of reference_code/vibe-sync
+
 By following these instructions, you will help create a high-quality, maintainable, and user-friendly C++ application.
