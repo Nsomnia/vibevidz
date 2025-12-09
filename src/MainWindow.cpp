@@ -1,4 +1,5 @@
 #include "MainWindow.h"
+#include "ProjectMWidget.h"
 #include <QDockWidget>
 #include <QListWidget>
 #include <QVBoxLayout>
@@ -12,9 +13,8 @@ MainWindow::MainWindow(QWidget *parent)
     resize(1280, 720);
 
     // Central widget for projectM visualization
-    auto *centralWidget = new QWidget(this);
-    setCentralWidget(centralWidget);
-    centralWidget->setStyleSheet("background-color: black;");
+    m_projectMWidget = new ProjectMWidget(this);
+    setCentralWidget(m_projectMWidget);
 
 
     // Dock widget for controls

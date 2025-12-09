@@ -20,17 +20,19 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(projectM)
 
 # Find Qt6
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets OpenGL OpenGLWidgets)
 
 # Define the executable
 add_executable(vibevidz
   src/main.cpp
   src/MainWindow.h
   src/MainWindow.cpp
+  src/ProjectMWidget.h
+  src/ProjectMWidget.cpp
 )
 
 # Link against Qt6 and projectM.
 # The target name for projectM is typically the project name itself, or libprojectM,
 # or projectM::projectM depending on how it's defined in its CMakeLists.txt.
 # Based on earlier investigations, 'projectM' was found to be a valid target.
-target_link_libraries(vibevidz PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets projectM)
+target_link_libraries(vibevidz PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets Qt6::OpenGL Qt6::OpenGLWidgets projectM)

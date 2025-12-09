@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+class ProjectMWidget; // Forward declaration
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -10,6 +12,9 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+private:
+    ProjectMWidget *m_projectMWidget;
 };
 
 #endif // MAINWINDOW_H
