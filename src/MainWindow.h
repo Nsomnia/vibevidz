@@ -3,18 +3,18 @@
 
 #include <QMainWindow>
 
-class ProjectMWidget; // Forward declaration
+class ProjectMWidget;
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
 private:
-    ProjectMWidget *m_projectMWidget;
+    ProjectMWidget *m_visualizer;
 };
 
 #endif // MAINWINDOW_H

@@ -1,35 +1,24 @@
 #include "MainWindow.h"
 #include "ProjectMWidget.h"
-#include <QDockWidget>
-#include <QListWidget>
 #include <QVBoxLayout>
 #include <QWidget>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-    // Set up the main window
-    setWindowTitle("Vibevidz");
-    resize(1280, 720);
+    setWindowTitle("VibeVidz - projectM 4.1 Visualizer");
 
-    // Central widget for projectM visualization
-    m_projectMWidget = new ProjectMWidget(this);
-    setCentralWidget(m_projectMWidget);
+    // Create a central widget to hold layout
+    QWidget *central = new QWidget(this);
+    setCentralWidget(central);
 
+    // Create layout
+    QVBoxLayout *layout = new QVBoxLayout(central);
+    layout->setContentsMargins(0, 0, 0, 0);
 
-    // Dock widget for controls
-    auto *dock = new QDockWidget("Controls", this);
-    addDockWidget(Qt::LeftDockWidgetArea, dock);
-
-    auto *controlsWidget = new QWidget();
-    dock->setWidget(controlsWidget);
-
-    auto *layout = new QVBoxLayout();
-    controlsWidget->setLayout(layout);
-
-    // Placeholder for controls
-    auto *playlist = new QListWidget();
-    layout->addWidget(playlist);
+    // Create and add the visualizer
+    m_visualizer = new ProjectMWidget(this);
+    layout->addWidget(m_visualizer);
 }
 
 MainWindow::~MainWindow()
